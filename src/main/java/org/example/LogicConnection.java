@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 public class LogicConnection implements Runnable {
@@ -35,7 +34,6 @@ public class LogicConnection implements Runnable {
                 return;
             }
 
-//            final var path = parts[1];
             if (!validPaths.contains(request.getPath())) {
                 out.write((
                         "HTTP/1.1 404 Not Found\r\n" +
