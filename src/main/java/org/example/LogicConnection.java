@@ -26,6 +26,7 @@ public class LogicConnection implements Runnable {
                 final var out = new BufferedOutputStream(socket.getOutputStream())
         ) {
             final var requestLine = in.readLine();
+            Request request = new Request(requestLine);
             final var parts = requestLine.split(" ");
 
             if (parts.length != 3) {
@@ -33,8 +34,7 @@ public class LogicConnection implements Runnable {
                 return;
             }
 
-            final var path = parts[1];
-            if (!validPaths.contains(path)) {
+            if (!validPaths.contains(request.getPath())) {
                 out.write((
                         "HTTP/1.1 404 Not Found\r\n" +
                                 "Content-Length: 0\r\n" +
@@ -45,10 +45,10 @@ public class LogicConnection implements Runnable {
                 return;
             }
 
-            final var filePath = Path.of(".", "public", path);
+            final var filePath = Path.of(".", "public", request.getPath());
             final var mimeType = Files.probeContentType(filePath);
 
-            if (path.equals("/classic.html")) {
+            if (request.getPath().equals("/classic.html")) {
                 final var template = Files.readString(filePath);
                 final var content = template.replace(
                         "{time}",
